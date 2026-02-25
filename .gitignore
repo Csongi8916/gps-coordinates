@@ -1,0 +1,59 @@
+# =============================
+# Node / Frontend (React + Vite)
+# =============================
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Vite build output
+dist/
+build/
+.out/
+.vite/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# =============================
+# ASP.NET Core Backend
+# =============================
+bin/
+obj/
+wwwroot/lib/
+
+# User secrets (ASP.NET Core secrets manager)
+secrets.json
+
+# HTTPS certificates
+*.pfx
+*.p12
+
+# Logs
+*.log
+
+# =============================
+# IDE / Editor
+# =============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# =============================
+# Test & Coverage
+# =============================
+coverage/
+TestResults/
+
+# =============================
+# Temporary files
+# =============================
+*.tmp
+*.temp
