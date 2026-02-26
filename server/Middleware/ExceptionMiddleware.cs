@@ -2,13 +2,16 @@ public class ExceptionMiddleware
 {
   private readonly RequestDelegate _next;
   private readonly ILogger<ExceptionMiddleware> _logger;
+  private readonly IHostEnvironment _env;
 
   public ExceptionMiddleware(
       RequestDelegate next,
-      ILogger<ExceptionMiddleware> logger)
+      ILogger<ExceptionMiddleware> logger,
+      IHostEnvironment env)
   {
     _next = next;
     _logger = logger;
+    _env = env;
   }
 
   public async Task InvokeAsync(HttpContext context)
@@ -24,10 +27,26 @@ public class ExceptionMiddleware
       context.Response.StatusCode = 500;
       context.Response.ContentType = "application/json";
 
-      await context.Response.WriteAsJsonAsync(new
+      if (_env.IsDevelopment())
       {
-        Message = "Internal server error"
-      });
+        Console.WriteLine("Dev hibamanagement");
+        await context.Response.WriteAsJsonAsync(new ApiResponse<object>
+        {
+          Success = false,
+          Error = ex.Message,
+          Data = null
+        });
+      }
+      else
+      {
+        Console.WriteLine("Prod hibamanagement");
+        await context.Response.WriteAsJsonAsync(new ApiResponse<object>
+        {
+          Success = false,
+          Error = "Internal server error",
+          Data = null
+        });
+      }
     }
   }
 }
