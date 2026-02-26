@@ -2,9 +2,6 @@
 # Node / Frontend (React + Vite)
 # =============================
 node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Vite build output
 dist/
