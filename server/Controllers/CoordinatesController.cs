@@ -13,34 +13,51 @@ public class CoordinatesController : ControllerBase
 
   // GET: api/coordinates
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<CoordinateDto>>> GetAll()
+  public async Task<IActionResult> GetAll()
   {
     var result = await _service.GetAllAsync();
-    return Ok(result);
+
+    return Ok(new ApiResponse<IEnumerable<CoordinateDto>>
+    {
+      Success = true,
+      Data = result
+    });
   }
 
   // GET: api/coordinates/5
   [HttpGet("{id:int}")]
-  public async Task<ActionResult<CoordinateDto>> GetById(int id)
+  public async Task<IActionResult> GetById(int id)
   {
     var result = await _service.GetByIdAsync(id);
 
     if (result == null)
-      return NotFound();
+      return NotFound(new ApiResponse<object>
+      {
+        Success = false,
+        Error = "Coordinate not found"
+      });
 
-    return Ok(result);
+    return Ok(new ApiResponse<CoordinateDto>
+    {
+      Success = true,
+      Data = result
+    });
   }
 
   // POST: api/coordinates
   [HttpPost]
-  public async Task<ActionResult<CoordinateDto>> Create(CreateCoordinateDto dto)
+  public async Task<IActionResult> Create(CreateCoordinateDto dto)
   {
     var created = await _service.CreateAsync(dto);
 
     return CreatedAtAction(
         nameof(GetById),
         new { id = created.Id },
-        created);
+        new ApiResponse<CoordinateDto>
+        {
+          Success = true,
+          Data = created
+        });
   }
 
   // PUT: api/coordinates/5
@@ -50,7 +67,11 @@ public class CoordinatesController : ControllerBase
     var success = await _service.UpdateAsync(id, dto);
 
     if (!success)
-      return NotFound();
+      return NotFound(new ApiResponse<object>
+      {
+        Success = false,
+        Error = "Coordinate not found"
+      });
 
     return NoContent();
   }
@@ -62,7 +83,11 @@ public class CoordinatesController : ControllerBase
     var success = await _service.DeleteAsync(id);
 
     if (!success)
-      return NotFound();
+      return NotFound(new ApiResponse<object>
+      {
+        Success = false,
+        Error = "Coordinate not found"
+      });
 
     return NoContent();
   }
