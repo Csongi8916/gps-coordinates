@@ -15,15 +15,7 @@ public class CoordinateService : ICoordinateService
   {
     return await _context.Coordinates
         .OrderBy(c => c.OrderIndex)
-        .Select(c => new CoordinateDto
-        {
-          Id = c.Id,
-          Latitude = c.Latitude,
-          Longitude = c.Longitude,
-          OrderIndex = c.OrderIndex,
-          Name = c.Name,
-          Description = c.Description
-        })
+        .Select(c => MapToDto(c))
         .ToListAsync();
   }
 
@@ -31,15 +23,7 @@ public class CoordinateService : ICoordinateService
   {
     return await _context.Coordinates
         .Where(c => c.Id == id)
-        .Select(c => new CoordinateDto
-        {
-          Id = c.Id,
-          Latitude = c.Latitude,
-          Longitude = c.Longitude,
-          OrderIndex = c.OrderIndex,
-          Name = c.Name,
-          Description = c.Description
-        })
+        .Select(c => MapToDto(c))
         .FirstOrDefaultAsync();
   }
 
@@ -57,15 +41,7 @@ public class CoordinateService : ICoordinateService
     _context.Coordinates.Add(entity);
     await _context.SaveChangesAsync();
 
-    return new CoordinateDto
-    {
-      Id = entity.Id,
-      Latitude = entity.Latitude,
-      Longitude = entity.Longitude,
-      OrderIndex = entity.OrderIndex,
-      Name = entity.Name,
-      Description = entity.Description
-    };
+    return MapToDto(entity);
   }
 
   public async Task<bool> UpdateAsync(int id, UpdateCoordinateDto dto)
@@ -95,5 +71,18 @@ public class CoordinateService : ICoordinateService
     _context.Coordinates.Remove(entity);
     await _context.SaveChangesAsync();
     return true;
+  }
+
+  private static CoordinateDto MapToDto(Coordinate entity)
+  {
+    return new CoordinateDto
+    {
+      Id = entity.Id,
+      Latitude = entity.Latitude,
+      Longitude = entity.Longitude,
+      OrderIndex = entity.OrderIndex,
+      Name = entity.Name,
+      Description = entity.Description
+    };
   }
 }
