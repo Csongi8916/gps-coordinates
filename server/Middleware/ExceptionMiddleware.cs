@@ -29,7 +29,6 @@ public class ExceptionMiddleware
 
       if (_env.IsDevelopment())
       {
-        Console.WriteLine("Dev hibamanagement");
         await context.Response.WriteAsJsonAsync(new ApiResponse<object>
         {
           Success = false,
@@ -39,7 +38,6 @@ public class ExceptionMiddleware
       }
       else
       {
-        Console.WriteLine("Prod hibamanagement");
         await context.Response.WriteAsJsonAsync(new ApiResponse<object>
         {
           Success = false,
