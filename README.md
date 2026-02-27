@@ -92,6 +92,12 @@ npm install
 npm run dev
 ```
 
+Frontend will start on:
+
+```bash
+http://localhost:5173
+```
+
 Frontend development server will start automatically.
 
 ### 6. Verify Application
