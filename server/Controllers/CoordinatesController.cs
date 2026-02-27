@@ -64,16 +64,20 @@ public class CoordinatesController : ControllerBase
   [HttpPut("{id:int}")]
   public async Task<IActionResult> Update(int id, UpdateCoordinateDto dto)
   {
-    var success = await _service.UpdateAsync(id, dto);
+    var updated = await _service.UpdateAsync(id, dto);
 
-    if (!success)
+    if (updated == null)
       return NotFound(new ApiResponse<object>
       {
         Success = false,
         Error = "Coordinate not found"
       });
 
-    return NoContent();
+    return Ok(new ApiResponse<CoordinateDto>
+    {
+      Success = true,
+      Data = updated
+    });
   }
 
   // DELETE: api/coordinates/5

@@ -1,21 +1,37 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styles from "./SidePanelForm.module.css"
 import type { Coordinate } from "../../api/coordinates"
 import type { SidePanelMode } from "./SidePanel"
 
 interface Props {
-  isLoading?: boolean
   mode: SidePanelMode
+  coordinate: Coordinate | null
   onSubmit: (data: Omit<Coordinate, "id">) => void
   onCancel: () => void
 }
 
-export const SidePanelForm = ({ mode, onSubmit, onCancel }: Props) => {
+export const SidePanelForm = ({ mode, coordinate, onSubmit, onCancel }: Props) => {
   const [name, setName] = useState("")
   const [latitude, setLatitude] = useState("")
   const [longitude, setLongitude] = useState("")
   const [orderIndex, setOrderIndex] = useState(0)
   const [description, setDescription] = useState("")
+
+  useEffect(() => {
+    if (!coordinate) return
+    setName(coordinate.name ?? "")
+    setLatitude(coordinate.latitude.toString())
+    setLongitude(coordinate.longitude.toString())
+    setOrderIndex(coordinate.orderIndex)
+    setDescription(coordinate.description ?? "")
+
+  }, [coordinate])
+
+  useEffect(() => {
+    if (mode === "create") {
+      resetForm()
+    }
+  }, [mode])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,6 +43,14 @@ export const SidePanelForm = ({ mode, onSubmit, onCancel }: Props) => {
       orderIndex,
       description
     })
+  }
+
+  const resetForm = () => {
+    setName("")
+    setLatitude("")
+    setLongitude("")
+    setOrderIndex(0)
+    setDescription("")
   }
 
   return (

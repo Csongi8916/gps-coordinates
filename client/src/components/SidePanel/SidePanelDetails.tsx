@@ -1,13 +1,14 @@
-import { Trash2 } from "lucide-react"
+import { Edit, Trash2 } from "lucide-react"
 import type { Coordinate } from "../../api/coordinates"
 import styles from "./SidePanelDetails.module.css"
 
 interface Props {
   coordinate: Coordinate | null
   onDeleteClick: () => void
+  onEditClick: () => void
 }
 
-export const SidePanelDetails = ({ coordinate, onDeleteClick }: Props) => {
+export const SidePanelDetails = ({ coordinate, onEditClick, onDeleteClick }: Props) => {
   if (!coordinate) return null
 
   return (
@@ -54,14 +55,24 @@ export const SidePanelDetails = ({ coordinate, onDeleteClick }: Props) => {
           </span>
         </div>
       </div>
-      <button
-        className={styles.button}
-        disabled={!coordinate}
-        onClick={onDeleteClick}
-      >
-        <Trash2  size={18} />
-        Törlés
-      </button>
+      <div className={styles.buttonRow}>
+        <button
+          className={`${styles.button} ${styles.editButton}`}
+          disabled={!coordinate}
+          onClick={onEditClick}
+        >
+          <Edit size={18} />
+          Módosítás
+        </button>
+        <button
+          className={`${styles.button} ${styles.deleteButton}`}
+          disabled={!coordinate}
+          onClick={onDeleteClick}
+        >
+          <Trash2  size={18} />
+          Törlés
+        </button>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { createCoordinate, deleteCoordinate, type Coordinate } from "../../api/coordinates"
+import { createCoordinate, deleteCoordinate, editCoordinate, type Coordinate, type CoordinateMutation } from "../../api/coordinates"
 import styles from "./SidePanel.module.css"
 import { SidePanelList } from "./SidePanelList"
 import { SidePanelDetails } from "./SidePanelDetails"
@@ -43,6 +43,22 @@ const [mode, setMode] = useState<SidePanelMode>("details")
     }
   })
 
+  const editMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: CoordinateMutation }) =>
+      editCoordinate(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["coordinates"] })
+      setMode("details")
+    }
+  })
+
+  const checkCoordinate = () => {
+    if (!selectedCoordinate) {
+      alert("Nincs kiválasztott koordináta!")
+      return
+    }
+  }
+
   return (
     <div className={styles.wrapper}>
       {isLoading && <div>Loading...</div>}
@@ -57,23 +73,35 @@ const [mode, setMode] = useState<SidePanelMode>("details")
         }}
       />
 
-      {mode === "create" ? (
+      {["create", "edit"].includes(mode) ? (
         <SidePanelForm
-          onSubmit={(data) => createMutation.mutate(data)}
+          onSubmit={(data) => {
+            mode === "create"
+              ? createMutation.mutate(data)
+              : editMutation.mutate({
+                  id: selectedCoordinate!.id,
+                  data: data
+                })
+          }}
           onCancel={() => setMode("details")}
           mode={mode}
-          isLoading={createMutation.isPending}
+          coordinate={
+            mode === 'edit'
+            ? selectedCoordinate
+            : null
+          }
         />
       ) : (
         <SidePanelDetails
           coordinate={selectedCoordinate}
+          onEditClick={() => {
+            checkCoordinate()
+            setMode("edit")
+          }}
           onDeleteClick={() => {
-            if (!selectedCoordinate) {
-              alert("Nincs kiválasztott koordináta!")
-              return
-            }
+            checkCoordinate()
             setMode("details")
-            deleteMutation.mutate(selectedCoordinate.id)
+            deleteMutation.mutate(selectedCoordinate!.id)
           }}
         />
       )}

@@ -55,6 +55,27 @@ export const createCoordinate = async (
   return response.json()
 }
 
+export const editCoordinate = async (
+  id: number,
+  data: CoordinateMutation
+) => {
+  const response = await fetch(
+    `http://localhost:5226/api/coordinates/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error("Failed to update coordinate")
+  }
+  return response.json()
+}
+
 export const deleteCoordinate = async (id: number) => {
   await fetch(`http://localhost:5226/api/coordinates/${id}`, {
     method: "DELETE"

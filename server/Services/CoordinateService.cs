@@ -47,12 +47,12 @@ public class CoordinateService : ICoordinateService
     return MapToDto(entity);
   }
 
-  public async Task<bool> UpdateAsync(int id, UpdateCoordinateDto dto)
+  public async Task<CoordinateDto?> UpdateAsync(int id, UpdateCoordinateDto dto)
   {
     var entity = await _context.Coordinates.FindAsync(id);
 
     if (entity == null)
-      return false;
+      return null;
 
     entity.Latitude = dto.Latitude;
     entity.Longitude = dto.Longitude;
@@ -61,7 +61,8 @@ public class CoordinateService : ICoordinateService
     entity.Description = dto.Description;
 
     await _context.SaveChangesAsync();
-    return true;
+
+    return MapToDto(entity);
   }
 
   public async Task<bool> DeleteAsync(int id)
