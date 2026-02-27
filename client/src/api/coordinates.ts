@@ -1,15 +1,16 @@
 interface ApiResponse<T> {
   success: boolean
-  data: T
+  data?: T
   error?: string | null
 }
 
 export interface Coordinate {
-  id: string
-  name: string
+  id: number
+  name?: string
   latitude: number
   longitude: number
-  createdAt: string
+  orderIndex: number
+  description?: string
 }
 
 export const getCoordinates = async (): Promise<Coordinate[]> => {
@@ -20,6 +21,10 @@ export const getCoordinates = async (): Promise<Coordinate[]> => {
   }
 
   const json: ApiResponse<Coordinate[]> = await res.json()
+
+  if (!json.success || !json.data) {
+    throw new Error(json.error ?? "Failed to fetch coordinates")
+  }
 
   return json.data
 }
