@@ -54,3 +54,9 @@ export const createCoordinate = async (
 
   return response.json()
 }
+
+export const deleteCoordinate = async (id: number) => {
+  await fetch(`http://localhost:5226/api/coordinates/${id}`, {
+    method: "DELETE"
+  })
+}

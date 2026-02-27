@@ -1,4 +1,4 @@
-import { createCoordinate, type Coordinate } from "../../api/coordinates"
+import { createCoordinate, deleteCoordinate, type Coordinate } from "../../api/coordinates"
 import styles from "./SidePanel.module.css"
 import { SidePanelList } from "./SidePanelList"
 import { SidePanelDetails } from "./SidePanelDetails"
@@ -14,7 +14,7 @@ interface Props {
   onSelect: (id: number | null) => void
 }
 
-export type SidePanelMode = "details" | "create" | "edit"
+export type SidePanelMode = "details" | "create" | "edit" | "delete"
 
 export const SidePanel = ({
   coordinates,
@@ -27,8 +27,16 @@ export const SidePanel = ({
 const [mode, setMode] = useState<SidePanelMode>("details")
   const queryClient = useQueryClient()
 
-  const mutation = useMutation({
+  const createMutation = useMutation({
     mutationFn: createCoordinate,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["coordinates"] })
+      setMode("details")
+    }
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCoordinate,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["coordinates"] })
       setMode("details")
@@ -51,13 +59,23 @@ const [mode, setMode] = useState<SidePanelMode>("details")
 
       {mode === "create" ? (
         <SidePanelForm
-          onSubmit={(data) => mutation.mutate(data)}
+          onSubmit={(data) => createMutation.mutate(data)}
           onCancel={() => setMode("details")}
           mode={mode}
-          isLoading={mutation.isPending}
+          isLoading={createMutation.isPending}
         />
       ) : (
-        <SidePanelDetails coordinate={selectedCoordinate} />
+        <SidePanelDetails
+          coordinate={selectedCoordinate}
+          onDeleteClick={() => {
+            if (!selectedCoordinate) {
+              alert("Nincs kiválasztott koordináta!")
+              return
+            }
+            setMode("details")
+            deleteMutation.mutate(selectedCoordinate.id)
+          }}
+        />
       )}
     </div>
   )

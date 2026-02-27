@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 12px;
+  margin-bottom: 15px;
 }
 
 .detailRow {
@@ -29,4 +30,24 @@
 .placeholder {
   color: #9ca3af;
   padding: 12px 0;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 12px;
+  background: #dc2626;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background: #b91c1c;
 }
