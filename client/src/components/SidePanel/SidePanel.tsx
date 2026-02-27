@@ -1,5 +1,6 @@
 import type { Coordinate } from "../../api/coordinates"
 import styles from "./SidePanel.module.css"
+import { SidePanelList } from "./SidePanelList"
 
 interface Props {
   coordinates: Coordinate[]
@@ -7,6 +8,7 @@ interface Props {
   isLoading: boolean
   isError: boolean
   onSelect: (id: number) => void
+  onCreateClick: () => void
 }
 
 export const SidePanel = ({
@@ -14,26 +16,21 @@ export const SidePanel = ({
   selectedCoordinate,
   isLoading,
   isError,
-  onSelect
+  onSelect,
+  onCreateClick
 }: Props) => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.title}>Coordinates</div>
-
-      <div className={styles.section}>
+      <>
         {isLoading && <div>Loading...</div>}
         {isError && <div>Failed to load data</div>}
 
-        {coordinates.map(coord => (
-          <div
-            key={coord.id}
-            className={styles.listItem}
-            onClick={() => onSelect(coord.id)}
-          >
-            {coord.latitude.toFixed(4)}, {coord.longitude.toFixed(4)}
-          </div>
-        ))}
-      </div>
+        <SidePanelList
+          coordinates={coordinates}
+          onSelect={onSelect}
+          onCreateClick={onCreateClick}
+        />
+      </>
 
       <div className={styles.section}>
         {selectedCoordinate ? (
@@ -42,9 +39,7 @@ export const SidePanel = ({
               <b>Detail</b>
             </div>
 
-            <div>
-              {selectedCoordinate.name}
-            </div>
+            <div>{selectedCoordinate.name}</div>
 
             <div>
               {selectedCoordinate.latitude.toFixed(4)},{" "}
@@ -52,7 +47,7 @@ export const SidePanel = ({
             </div>
           </>
         ) : (
-          <div>Detail / Edit panel</div>
+          <div>D / E</div>
         )}
       </div>
     </div>
