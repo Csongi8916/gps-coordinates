@@ -1,26 +1,35 @@
 import { Marker, Popup, Polyline } from "react-leaflet"
-import { useCoordinates } from "../../hooks/useCoordinates"
 import { useMapFitBounds } from "../../hooks/useMapFitBounds"
-import { useState } from "react"
 import { type LatLngTuple } from "leaflet"
+import type { Coordinate } from "../../api/coordinates"
 
-export const MapContent = () => {
-  const { data } = useCoordinates()
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+interface Props {
+  coordinates: Coordinate[]
+  selectedId: number | null
+  onSelectMarker: (id: number) => void
+}
 
+export const MapContent = ({
+  coordinates,
+  selectedId,
+  onSelectMarker
+}: Props) => {
   const polylinePositions: LatLngTuple[] =
-    data?.map(coord => [coord.latitude, coord.longitude]) ?? []
+    coordinates.map(coord => [
+      coord.latitude,
+      coord.longitude
+    ])
 
   useMapFitBounds(polylinePositions)
 
   return (
     <>
-      {data?.map(coord => (
+      {coordinates.map(coord => (
         <Marker
           key={coord.id}
           position={[coord.latitude, coord.longitude]}
           eventHandlers={{
-            click: () => setSelectedId(coord.id)
+            click: () => onSelectMarker(coord.id)
           }}
         >
           <Popup>

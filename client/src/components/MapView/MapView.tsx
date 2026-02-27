@@ -1,8 +1,15 @@
 import { MapContainer, TileLayer } from "react-leaflet"
 import { MapContent } from "./MapContent"
+import type { Coordinate } from "../../api/coordinates"
 import styles from "./MapView.module.css"
 
-export const MapView = () => {
+interface Props {
+  coordinates: Coordinate[]
+  selectedId: number | null
+  onSelectMarker: (id: number) => void
+}
+
+export const MapView = ({ coordinates, selectedId, onSelectMarker }: Props) => {
   return (
     <MapContainer className={styles.wrapper}>
       <TileLayer
@@ -10,7 +17,11 @@ export const MapView = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <MapContent />
+      <MapContent
+        coordinates={coordinates ?? []}
+        selectedId={selectedId}
+        onSelectMarker={onSelectMarker}
+      />
     </MapContainer>
   )
 }

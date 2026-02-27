@@ -11,7 +11,7 @@ export const useMapFitBounds = (positions: LatLngTuple[]) => {
     const bounds = new LatLngBounds(positions)
 
     map.fitBounds(bounds, {
-      padding: [50, 50]
+      padding: [150, 150]
     })
   }, [positions, map])
 }
