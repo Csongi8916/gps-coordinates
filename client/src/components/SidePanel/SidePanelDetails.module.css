@@ -1,0 +1,32 @@
+.detailGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.detailLabel {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.detailValue {
+  font-weight: 600;
+}
+
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.placeholder {
+  color: #9ca3af;
+  padding: 12px 0;
+}

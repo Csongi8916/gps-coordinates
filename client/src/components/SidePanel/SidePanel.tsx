@@ -1,6 +1,7 @@
 import type { Coordinate } from "../../api/coordinates"
 import styles from "./SidePanel.module.css"
 import { SidePanelList } from "./SidePanelList"
+import { SidePanelDetails } from "./SidePanelDetails"
 
 interface Props {
   coordinates: Coordinate[]
@@ -21,35 +22,16 @@ export const SidePanel = ({
 }: Props) => {
   return (
     <div className={styles.wrapper}>
-      <>
-        {isLoading && <div>Loading...</div>}
-        {isError && <div>Failed to load data</div>}
+      {isLoading && <div>Loading...</div>}
+      {isError && <div>Failed to load data</div>}
 
-        <SidePanelList
-          coordinates={coordinates}
-          onSelect={onSelect}
-          onCreateClick={onCreateClick}
-        />
-      </>
+      <SidePanelList
+        coordinates={coordinates}
+        onSelect={onSelect}
+        onCreateClick={onCreateClick}
+      />
 
-      <div className={styles.section}>
-        {selectedCoordinate ? (
-          <>
-            <div>
-              <b>Detail</b>
-            </div>
-
-            <div>{selectedCoordinate.name}</div>
-
-            <div>
-              {selectedCoordinate.latitude.toFixed(4)},{" "}
-              {selectedCoordinate.longitude.toFixed(4)}
-            </div>
-          </>
-        ) : (
-          <div>D / E</div>
-        )}
-      </div>
+      <SidePanelDetails coordinate={selectedCoordinate} />
     </div>
   )
 }

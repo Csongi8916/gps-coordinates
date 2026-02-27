@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react"
 import type { Coordinate } from "../../api/coordinates"
-import styles from "./SidePanel.module.css"
+import styles from "./SidePanelList.module.css"
 
 interface Props {
   coordinates: Coordinate[]
