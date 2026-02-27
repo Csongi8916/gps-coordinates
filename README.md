@@ -102,8 +102,6 @@ Frontend development server will start automatically.
 
 ---
 
----
-
 ## API Endpoints
 
 ### Coordinates
@@ -141,8 +139,6 @@ http://localhost:5173
 - Map marker and polyline rendering
 - Form state lifecycle management
 - Clean mutation workflows
-
----
 
 ---
 
