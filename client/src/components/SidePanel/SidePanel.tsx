@@ -1,16 +1,20 @@
-import type { Coordinate } from "../../api/coordinates"
+import { createCoordinate, type Coordinate } from "../../api/coordinates"
 import styles from "./SidePanel.module.css"
 import { SidePanelList } from "./SidePanelList"
 import { SidePanelDetails } from "./SidePanelDetails"
+import { useState } from "react"
+import { SidePanelForm } from "./SidePanelForm"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 interface Props {
   coordinates: Coordinate[]
   selectedCoordinate: Coordinate | null
   isLoading: boolean
   isError: boolean
-  onSelect: (id: number) => void
-  onCreateClick: () => void
+  onSelect: (id: number | null) => void
 }
+
+export type SidePanelMode = "details" | "create" | "edit"
 
 export const SidePanel = ({
   coordinates,
@@ -18,8 +22,19 @@ export const SidePanel = ({
   isLoading,
   isError,
   onSelect,
-  onCreateClick
 }: Props) => {
+
+const [mode, setMode] = useState<SidePanelMode>("details")
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: createCoordinate,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["coordinates"] })
+      setMode("details")
+    }
+  })
+
   return (
     <div className={styles.wrapper}>
       {isLoading && <div>Loading...</div>}
@@ -28,10 +43,22 @@ export const SidePanel = ({
       <SidePanelList
         coordinates={coordinates}
         onSelect={onSelect}
-        onCreateClick={onCreateClick}
+        onCreateClick={() => {
+          setMode("create")
+          onSelect(null)
+        }}
       />
 
-      <SidePanelDetails coordinate={selectedCoordinate} />
+      {mode === "create" ? (
+        <SidePanelForm
+          onSubmit={(data) => mutation.mutate(data)}
+          onCancel={() => setMode("details")}
+          mode={mode}
+          isLoading={mutation.isPending}
+        />
+      ) : (
+        <SidePanelDetails coordinate={selectedCoordinate} />
+      )}
     </div>
   )
 }

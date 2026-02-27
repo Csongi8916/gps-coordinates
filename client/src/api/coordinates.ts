@@ -13,18 +13,44 @@ export interface Coordinate {
   description?: string
 }
 
-export const getCoordinates = async (): Promise<Coordinate[]> => {
-  const res = await fetch("http://localhost:5226/api/Coordinates")
+export interface CoordinateMutation {
+  name?: string
+  latitude: number
+  longitude: number
+  orderIndex: number
+  description?: string
+}
 
-  if (!res.ok) {
+export const getCoordinates = async (): Promise<Coordinate[]> => {
+  const response = await fetch("http://localhost:5226/api/coordinates")
+
+  if (!response.ok) {
     throw new Error("Failed to fetch coordinates")
   }
 
-  const json: ApiResponse<Coordinate[]> = await res.json()
+  const json: ApiResponse<Coordinate[]> = await response.json()
 
   if (!json.success || !json.data) {
     throw new Error(json.error ?? "Failed to fetch coordinates")
   }
 
   return json.data
+}
+
+export const createCoordinate = async (
+  data: CoordinateMutation
+) => {
+  const response = await fetch("http://localhost:5226/api/coordinates", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to create coordinate")
+  }
+
+  return response.json()
 }

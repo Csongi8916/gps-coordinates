@@ -29,13 +29,16 @@ public class CoordinateService : ICoordinateService
 
   public async Task<CoordinateDto> CreateAsync(CreateCoordinateDto dto)
   {
+    var maxOrderIndex = await _context.Coordinates
+        .MaxAsync(x => x.OrderIndex);
+
     var entity = new Coordinate
     {
+      Name = dto.Name,
       Latitude = dto.Latitude,
       Longitude = dto.Longitude,
-      OrderIndex = dto.OrderIndex,
-      Name = dto.Name,
-      Description = dto.Description
+      Description = dto.Description,
+      OrderIndex = maxOrderIndex + 1
     };
 
     _context.Coordinates.Add(entity);
